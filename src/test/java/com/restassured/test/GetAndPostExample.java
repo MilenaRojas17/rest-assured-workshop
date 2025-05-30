@@ -1,36 +1,44 @@
 package com.restassured.test;
 
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import org.json.simple.JSONObject;
+import org.junit.Test;
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+
 public class GetAndPostExample {
-}
 
-@Test
-public void testGet() {
-	RestAssured.baseURI = "https://reqres.in/api";
-	
-	when().
-		get("/users?page=2").
-	then().
-		statusCode(200).
-		body("data.size()", is(6)).
-		body("data.first_name", hasItems("George", "Rachel"));
-};
-@Test
-public void testPost() {
-	
-	JSONObject request = new JSONObject();
-	
-	request.put("name", "Ernesto Perez");
-	request.put("job", "QA Automation");
+    @Test
+    public void testGet() {
+        RestAssured.baseURI = "https://reqres.in/api";
+        
+        when().
+            get("/users?page=2").
+        then().
+            statusCode(200).
+            body("data.size()", is(6)).
+            body("data.first_name", hasItems("George", "Rachel"));
+    }
 
-	RestAssured.baseURI =  "https://reqres.in/api";
-	
-	given().
-		header("Content-Type", "application/json").
-		contentType(ContentType.JSON).
-		body(request.toJSONString()).
-	when().
-		post("/users").
-	then().
-		statusCode(201).
-		log().all();
+    @Test
+    public void testPost() {
+        
+        JSONObject request = new JSONObject();
+        
+        request.put("name", "Ernesto Perez");
+        request.put("job", "QA Automation");
+
+        RestAssured.baseURI = "https://reqres.in/api";
+        
+        given().
+            header("Content-Type", "application/json").
+            contentType(ContentType.JSON).
+            body(request.toJSONString()).
+        when().
+            post("/users").
+        then().
+            statusCode(201).
+            log().all();
+    }
 }
